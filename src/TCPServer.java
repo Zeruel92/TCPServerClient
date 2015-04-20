@@ -1,6 +1,5 @@
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
 import java.io.*;
 
 
@@ -12,6 +11,8 @@ public class TCPServer implements Runnable{
 	private BufferedReader buff;
 	private ServerSocket ssock;
 	private Thread T;
+	private String inString;
+	private String outString;
 	
 	public TCPServer(){
 		try {
@@ -22,30 +23,46 @@ public class TCPServer implements Runnable{
 			e.printStackTrace();
 		}
 	}
+	
 	public void ricevi(){
 		try {
-			String instring=buff.readLine();
-			//String instring=inbuffer.toString();
-			Thread.sleep(5000);
-			System.out.println(instring);
-			//System.out.println("Ricevuti tot byte:");
-		} catch (IOException | InterruptedException e) {
+			inString="";
+			System.out.println("Receiving");
+			inString=buff.readLine();
+			System.out.println(inString);
+		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("FGHJK");
 		}
 	}
+	
+	public void process(){
+		System.out.println("Processing");
+		outString=inString.toUpperCase();
+	}
+	
+	public void sendResponse(){
+		System.out.println("Sending Response");
+		byte[] outBuffer=outString.getBytes();
+		try {
+			out.write(outBuffer);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void run(){
-		while(true){
 			try {
 				sock=ssock.accept();
-				Date timestamp=new Date();
 				Thread t=new Thread(this);
 				t.start();
-				//TCPServer s=new TCPServer();
 				in=sock.getInputStream();
 				out=sock.getOutputStream();
 				buff=new BufferedReader(new InputStreamReader(in));
 				this.ricevi();
+				this.process();
+				this.sendResponse();
+				buff.close();
 				out.close();
 				in.close();
 				sock.close();
@@ -53,6 +70,5 @@ public class TCPServer implements Runnable{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
 	}
 }
