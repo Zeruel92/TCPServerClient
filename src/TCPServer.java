@@ -56,8 +56,8 @@ public class TCPServer implements Runnable{
 				sock=ssock.accept();
 				Thread t=new Thread(this);
 				t.start();
-				in=sock.getInputStream();
 				out=sock.getOutputStream();
+				in=sock.getInputStream();
 				buff=new BufferedReader(new InputStreamReader(in));
 				this.ricevi();
 				this.process();

@@ -13,13 +13,12 @@ public class TCPClient {
 	public TCPClient(){
 		try {
 			sock=new Socket("localhost",12345);
-			String outString =new String("Provaa");
+			String outString =new String("Provaa\n");
 			byte[] buff=outString.getBytes();
 			out=sock.getOutputStream();
 			in=sock.getInputStream();
 			bufferedIn=new BufferedReader(new InputStreamReader(in));
 			out.write(buff);
-			out.flush();
 			System.out.println("Inviati");
 			while(!bufferedIn.ready()){}
 			System.out.println("Buffer pronto");
